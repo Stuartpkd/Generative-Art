@@ -1,16 +1,17 @@
 let planets = [];
 
 function setup() {
-    createCanvas(1920, 1080);
+    createCanvas(800, 800);
 
     // Create planets
-    planets.push(new Planet(40, 200, 0.01));
-    planets.push(new Planet(30, 150, 0.02));
-    planets.push(new Planet(10, 60, 0.01));
+    planets.push(new Planet(80, 300, 0.005));
+    planets.push(new Planet(60, 200, 0.01));
+    planets.push(new Planet(40, 100, 0.02));
 
     // Create moons
-    planets[0].addMoon(new Moon(8, 30, 0.03));  // radius, orbitRadius, orbitSpeed
-    planets[1].addMoon(new Moon(5, 20, 0.02));
+    planets[0].addMoon(new Moon(15, 50, 0.03, 50));  // radius, orbitRadius, orbitSpeed, orbitOffset
+    planets[1].addMoon(new Moon(10, 30, 0.02, 30));
+    planets[2].addMoon(new Moon(8, 20, 0.01, 20));
 }
 
 function draw() {
@@ -70,10 +71,11 @@ class Planet {
 }
 
 class Moon {
-    constructor(moonRadius, orbitRadius, orbitSpeed) {
+    constructor(moonRadius, orbitRadius, orbitSpeed, orbitOffset) {
         this.moonRadius = moonRadius;
         this.orbitRadius = orbitRadius;
         this.orbitSpeed = orbitSpeed;
+        this.orbitOffset = orbitOffset; // Added offset for each moon
         this.angle = random(TWO_PI);
     }
 
@@ -83,8 +85,13 @@ class Moon {
 
     display(planetX, planetY) {
         // Calculate moon position relative to the planet
-        let x = planetX + this.orbitRadius * cos(this.angle);
-        let y = planetY + this.orbitRadius * sin(this.angle);
+        let x = planetX + this.orbitRadius * cos(this.angle + this.orbitOffset);
+        let y = planetY + this.orbitRadius * sin(this.angle + this.orbitOffset);
+
+        // Draw moon's orbit
+        noFill();
+        stroke(150);
+        ellipse(planetX, planetY, this.orbitRadius * 5, this.orbitRadius * 5);
 
         // Draw moon
         fill(150);
